@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Scheddy.Models.Section>
+
+@{
+    ViewBag.Title = "Section Index";
+}
+
+<h2>Section</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { scheduleType = 0, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Course
+        </th>
+        <th>
+            Location
+        </th>
+        <th>
+            Instructor
+        </th>
+        <th>
+            Semester
+        </th>
+        <th>
+            CRN
+        </th>
+        <th>
+            Days Per Week
+        </th>
+        <th></th>
+    </tr>
+@try
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <th>
+                @Html.DisplayFor(model => item.Course.Prefix)
+                @Html.DisplayFor(model => item.Course.CourseNumber)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Classroom.BldgCode)
+                @Html.DisplayFor(model => item.Classroom.RoomNumber)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Instructor.LastName),
+                @Html.DisplayFor(model => item.Instructor.FirstName)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.Schedule.Semester)
+                @Html.DisplayFor(model => item.Schedule.AcademicYear)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.CRN)
+            </th>                        
+            <th>                          
+                @Html.DisplayFor(model => item.DaysTaught)
+            </th>                         
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.SectionId, scheduleType = 0 }) |
+                
+                @Html.ActionLink("Delete", "Delete", new { id = item.SectionId, scheduleType = 0 })
+            </td>
+        </tr>
+    }
+}catch (NullReferenceException)
+{
+    //do nothing?
+}
+</table>

@@ -1,0 +1,187 @@
+﻿@model Scheddy.ViewModels.ScheduleInstructorSection
+
+@{
+    ViewBag.Title = "Professor By Time";
+    DateTime firstClassTime = DateTime.Parse("12/12/2016 07:30:00 AM");
+}
+
+<h2>Instructors by Time</h2>
+
+<p>
+    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = (DateTime?) null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null) |
+    @Html.ActionLink("Classroom Schedule View", "IndexByClassroom", new { id = Model.scheduleId })
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.Raw("Instructor")
+        </th>
+        <th>
+            @Html.Raw("7:30")
+        </th>
+        <th>
+            @Html.Raw("8:30")
+        </th>
+        <th>
+            @Html.Raw("9:30")
+        </th>
+        <th>
+            @Html.Raw("10:30")
+        </th>
+        <th>
+            @Html.Raw("11:30")
+        </th>
+        <th>
+            @Html.Raw("12:30")
+        </th>
+        <th>
+            @Html.Raw("1:30")
+        </th>
+        <th>
+            @Html.Raw("2:30")
+        </th>
+        <th>
+            @Html.Raw("3:30")
+        </th>
+        <th>
+            @Html.Raw("4:30")
+        </th>
+        <th>
+            @Html.Raw("5:30")
+        </th>
+        <th>
+            @Html.Raw("6:30")
+        </th>
+        <th>
+            @Html.Raw("7:30")
+        </th>
+
+    </tr>
+
+    @try
+    {
+        foreach (var item in Model.instructor)
+        {
+            // find out how many different sets of days this instructor is teaching
+            List<string> uniqueDaysTaught = new List<string>();
+            foreach (var stuff in Model.indexByProfessor)
+            {
+                if (item.FirstName == stuff.FirstName && item.LastName == stuff.LastName && !uniqueDaysTaught.Contains(stuff.DaysTaught))
+                {
+                    uniqueDaysTaught.Add(stuff.DaysTaught);
+                }
+            }
+
+            // make a row for each day
+            foreach (var days in uniqueDaysTaught)
+            {
+
+                <tr>
+                    <td>
+                        @Html.Raw(@item.LastName.ToString() + ", " + @item.FirstName.ToString() + " - " + days)
+                    </td>
+
+                    @if (days == "ONL")
+                    {
+
+
+                        <td>
+
+                            @foreach (var stuff in Model.indexByProfessor)
+                            {
+                                if (stuff.DaysTaught == "ONL")
+                                {
+                                    
+                                    @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
+                                    @Html.Raw("</br>")
+                                    @Html.Raw(stuff.RoomNumber.ToString())
+
+                                    @Html.Raw("</br>")
+                                    @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 2}, null)
+                                    @Html.Raw(" | ")
+                                    @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
+                                    
+                                }
+                            }
+
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Create Online Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "ONLINE", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
+                        </td>
+
+                    }
+                    else
+                    {
+
+                            DateTime lastEndTime = firstClassTime;
+                            for (int i = 0; i < 13; i++)
+                            {
+                                DateTime newTime = firstClassTime.AddHours(i);
+                                bool spotTaken = false;
+
+                                <td>
+
+
+                                    @if (lastEndTime.TimeOfDay > newTime.TimeOfDay)
+                                    {
+                                        spotTaken = true;
+                                        DateTime oneHourAhead = newTime.AddHours(1);
+                                        if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
+                                        {
+                                            @Html.Raw("----->|")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("-------")
+                                        }
+
+                                    }
+
+                                    @foreach (var stuff in Model.indexByProfessor)
+                                    {
+                                        if (item.FirstName == stuff.FirstName && item.LastName == stuff.LastName
+                                            && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
+                                        {
+                                            spotTaken = true;
+                                            lastEndTime = (DateTime)stuff.EndTime;
+                                            @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
+                                            @Html.Raw("</br>")
+                                            @Html.Raw(stuff.BldgCode.ToString() + " " + stuff.RoomNumber.ToString())
+                                            @Html.Raw("</br>")
+                                            @stuff.Campus.ToString()
+                                            //@Html.Raw("</br>")
+                                            //@stuff.StartTime.Value.ToString("HH:mm - ")
+                                            //@stuff.EndTime.Value.ToString("HH:mm\n")
+
+                                            @Html.Raw("</br>")
+                                            @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
+                                            @Html.Raw(" | ")
+                                            @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
+
+                                            break;
+                                        }
+                                    }
+
+                                    @if (!spotTaken)
+                                    {
+                                        DateTime potentialEndTime = newTime.AddMinutes(50);
+                                        @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = newTime, endTime = potentialEndTime, classroom = "", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
+                                    }
+
+                                </td>
+                            }
+
+                        }
+
+                </tr>
+
+            }
+
+        }
+
+    }
+    catch (Exception e) { Console.Write(e); }
+
+</table>

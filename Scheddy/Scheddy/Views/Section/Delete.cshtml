@@ -1,0 +1,83 @@
+﻿@model Scheddy.ViewModels.SectionScheduleType
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Section</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.Course.Prefix)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.Course.Prefix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.Course.CourseNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.Course.CourseNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.Classroom.BldgCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.Classroom.BldgCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.Classroom.RoomNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.Classroom.RoomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.Instructor.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.Instructor.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.Instructor.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.Instructor.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.ScheduleId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.ScheduleId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.section.CRN)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.section.CRN)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /><br>
+            @Html.ActionLink("Back to Classroom Schedule View", "IndexByClassroom", "Schedule")<br>
+            @Html.ActionLink("Back to Instructor Schedule View", "IndexByProfessor", "Schedule")<br>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
